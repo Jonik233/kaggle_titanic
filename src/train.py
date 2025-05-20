@@ -30,7 +30,7 @@ def train(plot=False, mlflow_tracking=False):
     train_inputs, train_labels = preprocess_data(df=df, split=True)
 
     # Model initialization
-    model = LogisticRegression()
+    model = SVC(kernel='rbf', C=1.0, probability=True)
 
     # Fetching validation metrics using cross validation
     val_metrics = get_val_scores(model, train_inputs, train_labels)
@@ -63,7 +63,7 @@ def train(plot=False, mlflow_tracking=False):
     # Running mlflow tracking in case mlflow tracking is True
     if mlflow_tracking:
         tags = {
-            "Model": "Logistic Regression",
+            "Model": "SVM",
             "Branch": "dev1",
         }
         run_mlflow_tracking(
