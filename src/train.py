@@ -30,7 +30,7 @@ def train(plot=False, mlflow_tracking=False):
     train_inputs, train_labels = preprocess_data(df=df, split=True)
 
     # Model initialization
-    model = None
+    model = LogisticRegression()
 
     # Fetching validation metrics using cross validation
     val_metrics = get_val_scores(model, train_inputs, train_labels)
@@ -63,8 +63,7 @@ def train(plot=False, mlflow_tracking=False):
     # Running mlflow tracking in case mlflow tracking is True
     if mlflow_tracking:
         tags = {
-            "Model": "VotingClassifier",
-            "Transformer Pipeline": "V1",
+            "Model": "Logistic Regression",
             "Branch": "dev1",
         }
         run_mlflow_tracking(
@@ -72,7 +71,7 @@ def train(plot=False, mlflow_tracking=False):
             model_name=tags["Model"],
             inputs=train_inputs,
             tracking_uri=env_config["MLFLOW_RUNS_PATH"],
-            experiment_name="Transformer Pipeline V1",
+            experiment_name="Preprocessing V1",
             run_name=tags["Model"],
             tags=tags,
             train_metrics=train_metrics,
@@ -82,4 +81,4 @@ def train(plot=False, mlflow_tracking=False):
 
 
 if __name__ == "__main__":
-    train(plot=False, mlflow_tracking=False)
+    train(plot=True, mlflow_tracking=True)
