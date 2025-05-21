@@ -31,13 +31,12 @@ def ml_objective(trial, trial_inputs, trial_labels):
 
     param_grid = {
         "n_estimators": trial.suggest_int("n_estimators", 100, 200, step=10),
-        "max_depth": trial.suggest_int("max_depth", 1, 3, step=1),
-        "min_child_weight": trial.suggest_int("min_child_weight", 1, 3, step=1),
-        "learning_rate": trial.suggest_float("learning_rate", 0.1, 1, step=0.1),
-        "gamma": trial.suggest_float("gamma", 0.1, 1, step=0.1),
-        "reg_alpha": trial.suggest_float("reg_alpha", 0.1, 1, step=0.1),
-        "reg_lambda": trial.suggest_float("reg_lambda", 0.1, 1, step=0.1),
-        "colsample_bytree": trial.suggest_float("colsample_bytree", 0.1, 1, step=0.1)
+        "max_depth": trial.suggest_int("max_depth", 1, 6, step=1),
+        "min_samples_split": trial.suggest_int("min_samples_split", 16, 25, step=1),
+        "min_samples_leaf": trial.suggest_int("min_samples_leaf", 10, 15, step=1),
+        "max_leaf_nodes": trial.suggest_int("max_leaf_nodes", 20, 40, step=1),
+        "criterion": trial.suggest_categorical("criterion", ["gini", "entropy", "log_loss"]),
+        "max_features": trial.suggest_categorical("max_features", ["sqrt", "log2", None, 0.5, 0.6, 0.8])
     }
 
     cv = KFold(n_splits=4, shuffle=True, random_state=42)
@@ -47,7 +46,7 @@ def ml_objective(trial, trial_inputs, trial_labels):
         train_inputs, test_inputs = trial_inputs[train_idx], trial_inputs[test_idx]
         train_labels, test_labels = trial_labels[train_idx], trial_labels[test_idx]
 
-        model = XGBClassifier(**param_grid, objective='binary:logistic', random_seed=42, n_jobs=-1)
+        model = RandomForestClassifier(**param_grid, random_state=42, n_jobs=-1)
 
         model.fit(train_inputs, train_labels)
         preds = model.predict(test_inputs)
@@ -110,7 +109,7 @@ if __name__ == "__main__":
     )
 
     try:
-        study.optimize(func, n_trials=800, show_progress_bar=True)
+        study.optimize(func, n_trials=1000, show_progress_bar=True)
     except KeyboardInterrupt:
         print("\nOptimization interrupted. Saving progress...")
 

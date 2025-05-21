@@ -30,7 +30,15 @@ def train(plot=False, mlflow_tracking=False):
     train_inputs, train_labels = preprocess_data(df=df, split=True)
 
     # Model initialization
-    model = SVC(kernel='rbf', C=1.0, probability=True)
+    model = RandomForestClassifier(n_estimators=140,
+                                   max_depth=5,
+                                   min_samples_split=17,
+                                   min_samples_leaf=11,
+                                   max_leaf_nodes=24,
+                                   criterion="gini",
+                                   max_features=0.8,
+                                   random_state=42,
+                                   n_jobs=-1)
 
     # Fetching validation metrics using cross validation
     val_metrics = get_val_scores(model, train_inputs, train_labels)
@@ -63,7 +71,7 @@ def train(plot=False, mlflow_tracking=False):
     # Running mlflow tracking in case mlflow tracking is True
     if mlflow_tracking:
         tags = {
-            "Model": "SVM",
+            "Model": "RandomForestClassifier",
             "Branch": "dev1",
         }
         run_mlflow_tracking(
@@ -81,4 +89,4 @@ def train(plot=False, mlflow_tracking=False):
 
 
 if __name__ == "__main__":
-    train(plot=True, mlflow_tracking=True)
+    train(plot=True, mlflow_tracking=False)
