@@ -10,7 +10,7 @@ from config import ENV_FILE_PATH
 from preprocessing import preprocess_data
 from plotting_utils import plot_learning_curves
 from mlflow_tracking import run_mlflow_tracking
-from scores import get_train_scores, get_val_scores
+from scores import get_scores
 
 from sklearn.svm import SVC
 from xgboost import XGBClassifier
@@ -30,20 +30,26 @@ def train(plot=False, mlflow_tracking=False):
     train_inputs, train_labels = preprocess_data(df=df, split=True)
 
     # Model initialization
-    model = RandomForestClassifier(n_estimators=140,
-                                   max_depth=5,
-                                   min_samples_split=17,
-                                   min_samples_leaf=11,
-                                   max_leaf_nodes=24,
-                                   criterion="gini",
-                                   max_features=0.8,
-                                   random_state=42,
-                                   n_jobs=-1)
+    model = XGBClassifier(max_depth=4,
+                          learning_rate=0.8,
+                          objective='binary:logistic',
+                          n_estimators=340,
+                          gamma=1.1,
+                          reg_alpha=1.7,
+                          reg_lambda=3.0,
+                          colsample_bytree=0.8,
+                          min_child_weight=4,
+                          random_state=42,
+                          n_jobs=-1)
 
-    # Fetching validation metrics using cross validation
-    val_metrics = get_val_scores(model, train_inputs, train_labels)
+    # Fetching metrics using cross validation
+    train_metrics, val_metrics = get_scores(model, train_inputs, train_labels)
 
-    print("Validation" + "\n" + "-" * 30)
+    print("Training" + "\n" + "-" * 30)
+    for key, value in train_metrics.items():
+        print(f"{key}: {value:.4f}")
+
+    print("\nValidation" + "\n" + "-" * 30)
     for key, value in val_metrics.items():
         print(f"{key}: {value:.4f}")
 
@@ -61,17 +67,10 @@ def train(plot=False, mlflow_tracking=False):
 
     joblib.dump(model, env_config["MODEL_DUMP_PATH"])
 
-    # Fetching train metrics
-    train_metrics = get_train_scores(model, train_inputs, train_labels)
-
-    print("\nTraining" + "\n" + "-" * 30)
-    for key, value in train_metrics.items():
-        print(f"{key}: {value:.4f}")
-
     # Running mlflow tracking in case mlflow tracking is True
     if mlflow_tracking:
         tags = {
-            "Model": "RandomForestClassifier",
+            "Model": "XGBClassifier",
             "Branch": "dev1",
         }
         run_mlflow_tracking(
@@ -89,4 +88,4 @@ def train(plot=False, mlflow_tracking=False):
 
 
 if __name__ == "__main__":
-    train(plot=True, mlflow_tracking=False)
+    train(plot=True, mlflow_tracking=True)
