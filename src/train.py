@@ -5,6 +5,8 @@ import pandas as pd
 
 from pathlib import Path
 from dotenv import dotenv_values
+from sklearn.tree import DecisionTreeClassifier
+
 from config import ENV_FILE_PATH
 
 from preprocessing import preprocess_data
@@ -15,7 +17,7 @@ from scores import get_scores
 from sklearn.svm import SVC
 from xgboost import XGBClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier, VotingClassifier
+from sklearn.ensemble import RandomForestClassifier, VotingClassifier, AdaBoostClassifier
 
 np.random.seed(42)
 
@@ -30,17 +32,7 @@ def train(plot=False, mlflow_tracking=False):
     train_inputs, train_labels = preprocess_data(df=df, split=True)
 
     # Model initialization
-    model = XGBClassifier(max_depth=4,
-                          learning_rate=0.8,
-                          objective='binary:logistic',
-                          n_estimators=340,
-                          gamma=1.1,
-                          reg_alpha=1.7,
-                          reg_lambda=3.0,
-                          colsample_bytree=0.8,
-                          min_child_weight=4,
-                          random_state=42,
-                          n_jobs=-1)
+    model = None
 
     # Fetching metrics using cross validation
     train_metrics, val_metrics = get_scores(model, train_inputs, train_labels)
@@ -70,15 +62,15 @@ def train(plot=False, mlflow_tracking=False):
     # Running mlflow tracking in case mlflow tracking is True
     if mlflow_tracking:
         tags = {
-            "Model": "XGBClassifier",
-            "Branch": "dev1",
+            "Model": "None",
+            "Branch": "dev2",
         }
         run_mlflow_tracking(
             model=model,
             model_name=tags["Model"],
             inputs=train_inputs,
             tracking_uri=env_config["MLFLOW_RUNS_PATH"],
-            experiment_name="Preprocessing V1",
+            experiment_name="Preprocessing V2",
             run_name=tags["Model"],
             tags=tags,
             train_metrics=train_metrics,
@@ -88,4 +80,4 @@ def train(plot=False, mlflow_tracking=False):
 
 
 if __name__ == "__main__":
-    train(plot=True, mlflow_tracking=True)
+    train(plot=True, mlflow_tracking=False)
