@@ -32,7 +32,7 @@ def train(plot=False, mlflow_tracking=False):
     train_inputs, train_labels = preprocess_data(df=df, split=True)
 
     # Model initialization
-    model = None
+    model = SVC(kernel='rbf', C=1.0, gamma='scale', probability=True)
 
     # Fetching metrics using cross validation
     train_metrics, val_metrics = get_scores(model, train_inputs, train_labels)
@@ -62,7 +62,7 @@ def train(plot=False, mlflow_tracking=False):
     # Running mlflow tracking in case mlflow tracking is True
     if mlflow_tracking:
         tags = {
-            "Model": "None",
+            "Model": "SVM",
             "Branch": "dev2",
         }
         run_mlflow_tracking(
