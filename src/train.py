@@ -17,7 +17,11 @@ from scores import get_scores
 from sklearn.svm import SVC
 from xgboost import XGBClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier, VotingClassifier, AdaBoostClassifier
+from sklearn.ensemble import (
+    RandomForestClassifier,
+    VotingClassifier,
+    AdaBoostClassifier,
+)
 
 np.random.seed(42)
 
@@ -32,8 +36,15 @@ def train(plot=False, mlflow_tracking=False):
     train_inputs, train_labels = preprocess_data(df=df, split=True)
 
     # Model initialization
-    estimator = DecisionTreeClassifier(max_depth=4)
-    model = AdaBoostClassifier(estimator=estimator, n_estimators=100, learning_rate=0.1, algorithm="SAMME")
+    model = RandomForestClassifier(n_estimators=300,
+                                   max_depth=5,
+                                   min_samples_split=16,
+                                   min_samples_leaf=10,
+                                   max_features=0.8,
+                                   criterion="gini",
+                                   max_leaf_nodes=19,
+                                   random_state=42,
+                                   n_jobs=-1)
 
     # Fetching metrics using cross validation
     train_metrics, val_metrics = get_scores(model, train_inputs, train_labels)
@@ -63,7 +74,7 @@ def train(plot=False, mlflow_tracking=False):
     # Running mlflow tracking in case mlflow tracking is True
     if mlflow_tracking:
         tags = {
-            "Model": "AdaBoostClassifier",
+            "Model": "RandomForestClassifier",
             "Branch": "dev2",
         }
         run_mlflow_tracking(
@@ -76,7 +87,7 @@ def train(plot=False, mlflow_tracking=False):
             tags=tags,
             train_metrics=train_metrics,
             val_metrics=val_metrics,
-            plot_path="plot.png"
+            plot_path="plot.png",
         )
 
 
