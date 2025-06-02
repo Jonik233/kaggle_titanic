@@ -36,13 +36,13 @@ def train(plot=False, mlflow_tracking=False):
     train_inputs, train_labels = preprocess_data(df=df, split=True)
 
     # Model initialization
-    model = XGBClassifier(n_estimators=110,
-                          max_depth=4,
-                          min_child_weight=19,
-                          reg_alpha=0.5,
+    model = XGBClassifier(n_estimators=280,
+                          max_depth=2,
+                          min_child_weight=20,
+                          reg_alpha=1.2,
                           reg_lambda=2.2,
-                          gamma=0.6,
-                          learning_rate=0.8,
+                          gamma=0.5,
+                          learning_rate=1.0,
                           colsample_bytree=0.5,
                           objective='binary:logistic',
                           random_state=42,
@@ -85,7 +85,7 @@ def train(plot=False, mlflow_tracking=False):
             inputs=train_inputs,
             tracking_uri=env_config["MLFLOW_RUNS_PATH"],
             experiment_name="Preprocessing V2",
-            run_name=tags["Model"] + " V1",
+            run_name=tags["Model"] + " V2",
             tags=tags,
             train_metrics=train_metrics,
             val_metrics=val_metrics,
