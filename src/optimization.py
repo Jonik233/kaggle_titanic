@@ -30,13 +30,14 @@ np.random.seed(42)
 def ml_objective(trial, trial_inputs, trial_labels):
 
     param_grid = {
-        "n_estimators": trial.suggest_int("n_estimators", 200, 300, step=10),
+        "n_estimators": trial.suggest_int("n_estimators", 200, 350, step=10),
         "max_depth": trial.suggest_int("max_depth", 2, 12, step=1),
-        "min_samples_split": trial.suggest_int("min_samples_split", 20, 25, step=1),
-        "min_samples_leaf": trial.suggest_int("min_samples_leaf", 15, 20, step=1),
-        "max_features": trial.suggest_categorical("max_features", ["sqrt", "log2", None, 0.5, 0.8]),
-        "criterion": trial.suggest_categorical("criterion", ["gini", "entropy", "log_loss"]),
-        "max_leaf_nodes": trial.suggest_int("max_leaf_nodes", 10, 30, step=1)
+        "min_child_weight": trial.suggest_int("min_child_weight", 13, 20, step=1),
+        "reg_alpha": trial.suggest_float("reg_alpha", 1, 2, step=0.1),
+        "reg_lambda": trial.suggest_float("reg_lambda", 1, 2.5, step=0.1),
+        "gamma": trial.suggest_float("gamma", 0.5, 1.5, step=0.1),
+        "learning_rate": trial.suggest_float("learning_rate", 0.1, 1, step=0.1),
+        "colsample_bytree": trial.suggest_float("colsample_bytree", 0.1, 1, step=0.1),
     }
 
     cv = KFold(n_splits=4, shuffle=True, random_state=42)
@@ -46,7 +47,7 @@ def ml_objective(trial, trial_inputs, trial_labels):
         train_inputs, test_inputs = trial_inputs[train_idx], trial_inputs[test_idx]
         train_labels, test_labels = trial_labels[train_idx], trial_labels[test_idx]
 
-        model = RandomForestClassifier(**param_grid, n_jobs=-1, random_state=42)
+        model = XGBClassifier(**param_grid, objective='binary:logistic', random_state=42, n_jobs=-1)
 
         model.fit(train_inputs, train_labels)
         preds = model.predict(test_inputs)
@@ -109,7 +110,7 @@ if __name__ == "__main__":
     )
 
     try:
-        study.optimize(func, n_trials=700, show_progress_bar=True)
+        study.optimize(func, n_trials=1000, show_progress_bar=True)
     except KeyboardInterrupt:
         print("\nOptimization interrupted. Saving progress...")
 

@@ -36,15 +36,17 @@ def train(plot=False, mlflow_tracking=False):
     train_inputs, train_labels = preprocess_data(df=df, split=True)
 
     # Model initialization
-    model = RandomForestClassifier(n_estimators=300,
-                                   max_depth=5,
-                                   min_samples_split=16,
-                                   min_samples_leaf=10,
-                                   max_features=0.8,
-                                   criterion="gini",
-                                   max_leaf_nodes=19,
-                                   random_state=42,
-                                   n_jobs=-1)
+    model = XGBClassifier(n_estimators=110,
+                          max_depth=4,
+                          min_child_weight=19,
+                          reg_alpha=0.5,
+                          reg_lambda=2.2,
+                          gamma=0.6,
+                          learning_rate=0.8,
+                          colsample_bytree=0.5,
+                          objective='binary:logistic',
+                          random_state=42,
+                          n_jobs=-1)
 
     # Fetching metrics using cross validation
     train_metrics, val_metrics = get_scores(model, train_inputs, train_labels)
@@ -74,7 +76,7 @@ def train(plot=False, mlflow_tracking=False):
     # Running mlflow tracking in case mlflow tracking is True
     if mlflow_tracking:
         tags = {
-            "Model": "RandomForestClassifier",
+            "Model": "XGBClassifier",
             "Branch": "dev2",
         }
         run_mlflow_tracking(
@@ -83,7 +85,7 @@ def train(plot=False, mlflow_tracking=False):
             inputs=train_inputs,
             tracking_uri=env_config["MLFLOW_RUNS_PATH"],
             experiment_name="Preprocessing V2",
-            run_name=tags["Model"],
+            run_name=tags["Model"] + " V1",
             tags=tags,
             train_metrics=train_metrics,
             val_metrics=val_metrics,
