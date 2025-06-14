@@ -1,3 +1,5 @@
+from typing import Union, Tuple
+
 import joblib
 import numpy as np
 import pandas as pd
@@ -25,6 +27,13 @@ np.random.seed(42)
 
 
 def fill_na(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Fills nan values in columns that are specified in CATEGORICAL_COLS_TO_FILL, NUMERICAL_COLS_TO_FILL
+    Simple imputer with 'mean' strategy is used for numeric columns
+    Simple imputer with 'most_frequent' strategy is used for categorical columns
+    :param df: input pandas.DataFrame
+    :return: pandas.DataFrame
+    """
 
     # Loading env config and imputers paths
     env_config = dotenv_values(ENV_FILE_PATH)
@@ -68,6 +77,12 @@ def fill_na(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def encode(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Applies binary encoding to Sex column and OneHotEncoding to columns specified in COLS_TO_ENCODE
+    OneHotEncoder is set up with categories specified to be encoded for each particular column
+    :param df: input pandas.DataFrame
+    :return: pandas.DataFrame
+    """
 
     # Encoding categorical column 'Sex'
     df["Sex"] = df["Sex"].map({"male": 1, "female": 0})
@@ -117,6 +132,12 @@ def encode(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def scale(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Applies standard scaling for STANDARD_SCALE_COLS and log scaling for LOG_SCALE_COLS
+    :param df: input pandas.DataFrame
+    :return: pandas.DataFrame
+    """
+
     # Loading env config and scaler path
     env_config = dotenv_values(ENV_FILE_PATH)
     scaler_path = Path(env_config["SCALER_DUMP_PATH"])
@@ -143,6 +164,12 @@ def scale(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def create_new_cols(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Creates new columns in given pandas.DataFrame
+    :param df: input pandas.DataFrame
+    :return: pandas.DataFrame
+    """
+
     # Creating new column using number of siblings(SibSp) and number of Parents/Children(Parch)
     df["Family_size"] = df["Parch"] + df["SibSp"]
 
@@ -155,21 +182,35 @@ def create_new_cols(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def bin_family_size(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Applies binning to Family_size columns
+    :param df: input pandas.DataFrame
+    :return: pandas.DataFrame
+    """
     df["Family_size"] = pd.cut(df["Family_size"], bins=FAMILY_SIZE_BINS, labels=FAMILY_SIZE_LABELS)
     return df
 
 
 def drop(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Drops columns from df specified in COLS_TO_DROP
-    :param df: pd.DataFrame
-    :return: data frame
+    Drops columns from input pandas.DataFrame specified in COLS_TO_DROP
+    :param df: input pandas.DataFrame
+    :return: pandas.DataFrame
     """
     data = df.drop(columns=COLS_TO_DROP)
     return data
 
 
-def preprocess_data(df: pd.DataFrame, split: bool = False, label: str = "Survived"):
+def preprocess_data(
+    df: pd.DataFrame, split: bool = False, label: str = "Survived"
+) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
+    """
+    Applies a pipeline of transformations to a given pandas.DataFrame
+    :param df: input pandas.DataFrame
+    :param split: bool value, if True - splits on inputs and labels
+    :param label: str, default label name
+    :return: np.ndarray
+    """
 
     # Filling nan values using numerical and categorical imputers
     df = fill_na(df)
