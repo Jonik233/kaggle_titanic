@@ -1,7 +1,6 @@
 import numpy as np
 from typing import Tuple, Dict
 from sklearn.model_selection import cross_validate, KFold
-from sklearn.metrics import f1_score, accuracy_score, log_loss, roc_auc_score
 
 
 def get_scores(
