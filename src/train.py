@@ -16,7 +16,14 @@ from xgboost import XGBClassifier
 np.random.seed(42)
 
 
-def train(plot=False, mlflow_tracking=False):
+def train(plot=False, mlflow_tracking=False) -> None:
+    """
+    Trains a specified model on the titanic dataset
+    Saves metrics and model metadata using mlflow tracking in case mlflow_tracking is True
+    :param plot: bool value, if True - plots the training metrics
+    :param mlflow_tracking: bool value, if True - tracks training experiment
+    :return: None
+    """
 
     # Loading data
     env_config = dotenv_values(ENV_FILE_PATH)
@@ -26,17 +33,19 @@ def train(plot=False, mlflow_tracking=False):
     train_inputs, train_labels = preprocess_data(df=df, split=True)
 
     # Model initialization
-    model = XGBClassifier(n_estimators=280,
-                          max_depth=2,
-                          min_child_weight=20,
-                          reg_alpha=1.2,
-                          reg_lambda=2.2,
-                          gamma=0.5,
-                          learning_rate=1.0,
-                          colsample_bytree=0.5,
-                          objective='binary:logistic',
-                          random_state=42,
-                          n_jobs=-1)
+    model = XGBClassifier(
+        n_estimators=280,
+        max_depth=2,
+        min_child_weight=20,
+        reg_alpha=1.2,
+        reg_lambda=2.2,
+        gamma=0.5,
+        learning_rate=1.0,
+        colsample_bytree=0.5,
+        objective="binary:logistic",
+        random_state=42,
+        n_jobs=-1,
+    )
 
     # Fetching metrics using cross validation
     train_metrics, val_metrics = get_scores(model, train_inputs, train_labels)
