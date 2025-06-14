@@ -4,28 +4,6 @@ from config import ENV_FILE_PATH
 from dotenv import dotenv_values
 from preprocessing import preprocess_data
 
-# def network_encoder():
-#     df_test = pd.read_csv("data/test.csv")
-#     ids = df_test["PassengerId"].tolist()
-#     device = "cuda" if torch.cuda.is_available() else "cpu"
-#
-#     pipeline = TransformerPipeline()
-#     test_data = pipeline.transform(df_test)
-#     test_data = torch.from_numpy(test_data).to(device=device)
-#
-#     with torch.no_grad():
-#         model = Model(10).to(device=device)
-#         state_dict = torch.load("weights.pth")
-#         model.load_state_dict(state_dict)
-#
-#         model.eval()
-#         probs = model(test_data)
-#         y_pred = torch.where(probs > 0.5, 1, 0)
-#
-#         submission_data = {"PassengerId":ids, "Survived":y_pred.cpu()}
-#         df = pd.DataFrame(submission_data)
-#         df.to_csv("submission.csv", index=False)
-
 
 def common_encoder():
     env_config = dotenv_values(ENV_FILE_PATH)
