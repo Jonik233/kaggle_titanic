@@ -2,26 +2,16 @@ import os
 import joblib
 import numpy as np
 import pandas as pd
-
 from pathlib import Path
 from dotenv import dotenv_values
-from sklearn.tree import DecisionTreeClassifier
+from mlflow_tracking import run_mlflow_tracking
 
+from scores import get_scores
 from config import ENV_FILE_PATH
-
 from preprocessing import preprocess_data
 from plotting_utils import plot_learning_curves
-from mlflow_tracking import run_mlflow_tracking
-from scores import get_scores
 
-from sklearn.svm import SVC
 from xgboost import XGBClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import (
-    RandomForestClassifier,
-    VotingClassifier,
-    AdaBoostClassifier,
-)
 
 np.random.seed(42)
 
