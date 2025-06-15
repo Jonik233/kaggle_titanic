@@ -48,42 +48,6 @@ def ml_objective(trial, trial_inputs, trial_labels):
     return np.mean(cv_predicts)
 
 
-# def define_model(trial):
-#     n_layers = trial.suggest_int("n_layers", 1, 10)
-#
-#     layers = []
-#     in_features = 10
-#     out_features = trial.suggest_int(f"out_features", 10, 250, step=10)
-#     for i in range(n_layers):
-#         layers.append(nn.Linear(in_features, out_features))
-#         layers.append(nn.BatchNorm1d(out_features))
-#         layers.append(nn.Tanh())
-#         in_features = out_features
-#
-#     layers.append(nn.Linear(in_features, 2))
-#     return nn.Sequential(*layers)
-#
-#
-# def dp_objective(trial, device, epochs, train_dataloader, val_dataloader):
-#     model = define_model(trial).to(device=device)
-#     loss_fn = nn.CrossEntropyLoss()
-#
-#     lr = trial.suggest_float("lr", 8e-4, 8e-2)
-#     optimizer_name = trial.suggest_categorical("optimizer_name", ["Adam", "RMSprop"])
-#     optimizer = getattr(optim, optimizer_name)(model.parameters(), lr=lr)
-#
-#     best_val_fscore = -1
-#
-#     for _ in range(epochs):
-#         train_loss, train_acc, train_recall, train_precision, train_fscore = train(model, device, optimizer, loss_fn, train_dataloader)
-#         val_loss, val_acc, val_recall, val_precision, val_fscore = val_test(model, device, val_dataloader, loss_fn)
-#
-#         if val_fscore > best_val_fscore:
-#             best_val_fscore = val_fscore
-#
-#     return best_val_fscore
-
-
 if __name__ == "__main__":
     env_config = dotenv_values("./.env")
     df = pd.read_csv(env_config["DATASET_PATH"])
