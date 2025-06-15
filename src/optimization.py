@@ -3,26 +3,13 @@ import numpy as np
 import pandas as pd
 from dotenv import dotenv_values
 
-# from models import Model
-from sklearn.model_selection import KFold
 from sklearn.metrics import f1_score
+from sklearn.model_selection import KFold
 
-# from train_val import train, val_test
-from transforms import TransformerPipeline
 import matplotlib.pyplot as plt
 from optuna.visualization.matplotlib import plot_param_importances
 
-from sklearn.svm import SVC
 from xgboost import XGBClassifier
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.ensemble import (
-    RandomForestClassifier,
-    BaggingClassifier,
-    AdaBoostClassifier,
-    GradientBoostingClassifier,
-)
 
 np.random.seed(42)
 
