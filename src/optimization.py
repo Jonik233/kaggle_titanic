@@ -7,6 +7,7 @@ from sklearn.metrics import f1_score
 from sklearn.model_selection import KFold
 
 import matplotlib.pyplot as plt
+from preprocessing import preprocess_data
 from optuna.visualization.matplotlib import plot_param_importances
 
 from xgboost import XGBClassifier
@@ -52,8 +53,7 @@ if __name__ == "__main__":
     env_config = dotenv_values("./.env")
     df = pd.read_csv(env_config["DATASET_PATH"])
 
-    pipeline = TransformerPipeline()
-    inputs, labels = pipeline.transform(df, split_attr=True)
+    inputs, labels = preprocess_data(df=df, split=True)
 
     func = lambda trial: ml_objective(trial, inputs, labels)
     study = optuna.create_study(
