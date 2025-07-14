@@ -1,0 +1,87 @@
+---------------------------------------------------------------------------------------------------
+
+model = XGBClassifier(max_depth=4,
+                      learning_rate=0.8,
+                      objective='binary:logistic',
+                      n_estimators=340,
+                      gamma=1.1,
+                      reg_alpha=1.7,
+                      reg_lambda=3.0,
+                      colsample_bytree=0.8,
+                      min_child_weight=4,
+                      random_state=42,
+                      n_jobs=-1)
+
+Train Accuracy: 0.8402567063183051
+Train F1 score: 0.776493401205703
+Train Loss: 0.3947978882260672
+Train ROC AUC: 0.888184215286026
+
+Val Accuracy: 0.8350048478972247
+Val F1 score: 0.7709931153041664
+Val Loss: 0.42892719993191
+Val ROC AUC: 0.8607136112352951
+
+Public Score: 0.78947
+
+---------------------------------------------------------------------------------------------------
+
+model = RandomForestClassifier(
+    n_estimators=300,
+    max_depth=5,
+    min_samples_split=20,
+    min_samples_leaf=10,
+    max_leaf_nodes=24,
+    criterion="gini",
+    max_features=0.8,
+    random_state=42,
+    n_jobs=-1
+)
+
+Training
+------------------------------
+Train F1 score: 0.7837
+Train Accuracy: 0.8496
+Train ROC AUC: 0.9116
+Train Loss: 0.3655
+
+Validation
+------------------------------
+Val F1 score: 0.7439
+Val Accuracy: 0.8227
+Val ROC AUC: 0.8625
+Val Loss: 0.4263
+
+Public Score: 0.78708
+
+---------------------------------------------------------------------------------------------------
+svm = SVC(kernel='rbf', C=1.0, probability=True)
+
+Train Accuracy: 0.8338945005611672
+Train F1 score: 0.7635782747603834
+Train Loss: 0.4154115287340284
+Train ROC AUC: 0.8772728725274024
+
+Val Accuracy: 0.8249151617985699
+Val F1 score" 0.7480363813040006
+Val Loss: 0.44324830639881563
+Val ROC AUC: 0.8508563462874094
+
+Public score: 0.78468
+
+---------------------------------------------------------------------------------------------------
+model = LogisticRegression()
+
+Train Accuracy: 0.8103254769921436
+Train F1 score: 0.7427701674277016
+Train Loss: 0.43018956431830374
+Train ROC AUC: 0.8648180104176653
+
+Val Accuracy: 0.811452147214479
+Val F1 score: 0.7450466512732079
+Val Loss: 0.4385969698416682
+Val ROC AUC: 0.8585480077688803
+
+Public score: 0.75358
+
+---------------------------------------------------------------------------------------------------
