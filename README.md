@@ -72,3 +72,21 @@ It ensures **consistent transformations** across training, validation, and infer
 
 ```python
 X, y = preprocess_data(df, split=True, label="Survived")
+```
+
+---
+
+## 📈 Performance  
+
+The model was evaluated on training and validation sets using multiple metrics:  
+
+| Metric     | Train Set | Validation Set |
+|------------|-----------|----------------|
+| **F1 Score**   | 0.7448    | 0.7214         |
+| **Accuracy**   | 0.8208    | 0.8014         |
+| **ROC AUC**    | 0.8740    | 0.8400         |
+| **Log Loss**   | 0.4171    | 0.4616         |
+
+- **Kaggle Public Score:** **0.79425**
+
+---
