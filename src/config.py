@@ -36,4 +36,4 @@ STANDARD_SCALE_COLS = ["Age", "Fare"]
 LOG_SCALE_COLS = ["Fare"]
 
 # Path to env file with dir keys
-ENV_FILE_PATH = "C:\\Program_code\\AI\\kaggle_titanic\\.env"
+ENV_FILE_PATH = #your path to env file
