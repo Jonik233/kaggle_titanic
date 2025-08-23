@@ -26,6 +26,7 @@ model = XGBClassifier(
     random_state=42,
     n_jobs=-1
 )
+```
 
 ---
 
